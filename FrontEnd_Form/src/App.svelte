@@ -3,6 +3,7 @@
   import Survey from "./lib/Survey.svelte";
   import Questions from "./lib/Questions.svelte";
   import {onMount} from 'svelte'
+  import SlideCi from './lib/SlideCi.svelte';
   import { id } from "./lib/store";
 
   id.set((window.location.href).split('=')[1])
@@ -13,8 +14,8 @@
   let quick = 1;
   let short = 0;
   let slide = 0;
-  let dailyFlag = 1;
-  let weeklyFlag = 0;
+  let dailyFlag = 0;
+  let weeklyFlag = 1;
 
   let animate = false;
 

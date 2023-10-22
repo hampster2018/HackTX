@@ -3,10 +3,10 @@
     import App from '../App.svelte'
     import { fade } from 'svelte/transition'
 
-    let q_txt = "How has your satistifaction been with your daily tasks at work recently?"
-    let ans1 = "Good"
-    let ans2 = "Okay"
-    let ans3 = "Bad"
+    let q_txt = "Have you been able to talk with your friends recently?"
+    let ans1 = "I've been able to talk with them regularly"
+    let ans2 = "I've been able to talk with them sometimes"
+    let ans3 = "I haven't been able to talk with them recently"
 
     let ready = false;
     onMount(() => ready = true);

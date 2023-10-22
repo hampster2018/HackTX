@@ -43,7 +43,7 @@
   
   <style>
     .ci-submit-container {
-        background-color: green;
+        /* background-color: green; */
         padding-bottom: 20px;
     }
 
@@ -58,6 +58,8 @@
         border: none;
         height: 45px;
         border-radius: 8px;
+        color: white;
+        font-size: 20px;
     }
 
     .submit:focus{

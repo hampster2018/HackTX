@@ -6,12 +6,16 @@
     import ShortCi from './ShortCi.svelte';
     import SlideCi from './SlideCi.svelte';
     import AdditionalComments from './AdditionalComments.svelte';
+    import postAnswer from './PostData'
+    import { id, questions, answers } from './store'
+    import QuickCi_2 from './QuickCi_2.svelte';
+    import ShortCi_2 from './ShortCi_2.svelte';
 
     let user = "John";
     let q_types = [""];
     let numQuestions = 4;
     let foreman = "Mike";
-    q_types = ["short", "quick", "quick", "short"];
+    q_types = ["short", "quick", "slide", "quick2", "short2"];
 
 </script>
 
@@ -35,6 +39,16 @@
                 <div class="q-container">
                     <SlideCi/>
                 </div>
+            {:else if q_type == "quick2"}
+                <div class="q-container">
+                    <QuickCi_2/>
+                </div>
+            {:else if q_type == "short2"}
+                <div class="q-container">
+                    <ShortCi_2/>
+                </div>
+            {:else}
+                <p>error</p>
             {/if}
         {/each}
     </div>
@@ -42,7 +56,7 @@
     <AdditionalComments/>
 
     <div class="ci-submit-container">
-        <input class="submit" type="submit" value="Submit">
+        <input class="submit" type="submit" value="Submit" on:click={(e) => postAnswer($id, $questions[0], $answers)}>
     </div>
 
     
@@ -60,12 +74,14 @@
     }
 
     .submit {
-        margin-top: 15%;
+        margin-top: 0%;
         width: 100%;
         background-color: #846954;
         border: none;
         height: 45px;
         border-radius: 8px;
+        color: white;
+        font-size: 20px;
     }
 
     .submit:focus{

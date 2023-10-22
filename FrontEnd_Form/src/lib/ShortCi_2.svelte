@@ -2,48 +2,57 @@
     import { onMount } from 'svelte'
     import App from '../App.svelte'
     import { fade } from 'svelte/transition'
+    import { questions, answers } from './store';
 
-    let q_txt = "How has your satistifaction been with your daily tasks at work recently?"
-    let ans1 = "Good"
-    let ans2 = "Okay"
-    let ans3 = "Bad"
+    // console.log($answers)
 
-    let ready = false;
-    onMount(() => ready = true);
-
-    export const user = () => console.log('test');
+    // let contractor = "John"
 </script>
 
 <main class="ci-quick">
+
     <div class="ci-container">
-        <div class="te"></div>
-        <p>{q_txt}</p>
+        <p>Have you had time to decompress after work?</p>
     </div>
     <div class="ci-ans-container">
-        <button class="ans" id="ans-pos">{ans1}</button>
-        <button class="ans" id="ans-neu">{ans2}</button>
-        <button class="ans" id="ans-neg">{ans3}</button>
+        <textarea 
+            class="ans-input" 
+            placeholder="Aim to write at least two sentences." 
+            
+        />
     </div>
-
-
-    
 </main>
 
 <style>
+
+    .ci-quick {
+        /* border-style: solid; */
+    }
+
+    .ans-input{
+        background-color: white;
+        border: none;
+        box-shadow:4px 4px 4px 2px rgba(5, 5, 82, 0.1);
+        border-radius: 4px;
+        width: 100%;
+        min-height: 100px;
+        color: black;
+        min-width: 300px;
+        max-width: 350px;
+        min-height: 50px;
+    }
+
     .ci-ans-container{
-        /* display: flex; */
+        display: flex;
     }
 
     .ans{
-        width: 100%;
-        margin-top: 6%;
-        /* margin: 2%; */
+        width: 30%;
+        margin: 2%;
         border: solid #81BE1C;
-        color: white;
     }
 
     .ci-container{
-        /* border: solid 1px; */
         border-radius: 7px;
         margin-bottom: 20px;
         color: black;
@@ -57,9 +66,19 @@
         justify-content: center;
         font-weight: bold;
         font-size: 150%;
-        /* display: inline; */
-        /* justify-content: inline; */
-        
+    }
+
+    .submit {
+        margin: 2%;
+        width: 75%;
+        background-color: #846954;
+        border: none;
+        height: 45px;
+        border-radius: 8px;
+    }
+
+    .submit:focus{
+        background-color: #4f3e31;
     }
 
     #ans-pos{
