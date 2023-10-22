@@ -26,13 +26,13 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAIAPIKEY")
 openai.organization = os.getenv("OPENAIORGANIZATION")
 
-loaded_model = pickle.load(open(app.config["MODELPATH"], 'rb'))
+loaded_model = pickle.load(open(app.config["MODELPATH"], "rb"))
 authkey = os.getenv("AUTHKEY")
 authRejectMessage = os.getenv("AUTHREJECTMESSAGE")
 
+
 @app.before_request
 def checkAPI():
-    
     header = request.headers.get("Authorization")
 
     if header != authkey:
@@ -68,25 +68,27 @@ def hello_world():
     get_db()
     return "Hello, World!"
 
+
 @app.route("/setDailyQuestions", methods=["POST"])
 def setDailyQuestions():
     global dailyQuestions
 
     form = request.form
-    
+
     dte = date.today()
 
     dte = pd.to_datetime(dte.strftime("%Y-%m-%d"))
-                         
+
     if dte.dayofweek == 5:
-        dailyQuestions = generateQuestions(form['question'], True)
+        dailyQuestions = generateQuestions(form["question"], True)
 
     else:
-        dailyQuestions = generateQuestions(form['question'], False)
+        dailyQuestions = generateQuestions(form["question"], False)
 
     send_SMS()
 
     return "200"
+
 
 @app.route("/postDailyAnswer", methods=["POST"])
 def postDailyAnswer():
@@ -99,18 +101,24 @@ def postDailyAnswer():
 
     return "200"
 
+
 @app.route("/getDailyQuestions")
 def getDailyQuestions():
     global dailyQuestions
     return json.dumps(dailyQuestions)
+
 
 @app.route("/postResponse/<id>", methods=["POST"])
 def postResponse(id):
     form = request.form
     question = form["question"]
     answer = form["answer"]
+    score = sentimentAnalysis(question, answer)
+    db = get_db()
+    cur = db.cursor()
+    cur.execute("INSERT INTO form_responses VALUES (?, ?)", (id, score))
+    return score
 
-    return sentimentAnalysis(question, answer)
 
 @app.route("/serveModel")
 def serve_model():
@@ -120,21 +128,36 @@ def serve_model():
 
     return str(prediction[0])
 
+
 @app.route("/getQuestions")
 def getQuestions():
-    return generateUniqueQuestions()
+    try:
+        response = generateUniqueQuestions()
+    except Exception as e:
+        response = [
+            "How was your morning today?",
+            "How is your family doing?",
+            "How is your job going?",
+        ]
 
-@app.route("/sendSMS", methods=["GET"])
-def sendSMS():
-    send_SMS()
-    return "200"
+    return response
+
+
+##@app.route("/sendSMS", methods=["GET"])
+##def sendSMS():
+##    send_SMS()
+##    return "200"
+
 
 def sentimentAnalysis(question, answer):
-
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "Give only a number response from 1-100 on how positive you would rate the response to the question: " + question},
+            {
+                "role": "system",
+                "content": "Give only a number response from 1-100 on how positive you would rate the response to the question: "
+                + question,
+            },
             {"role": "user", "content": answer},
         ],
         max_tokens=300,
@@ -142,6 +165,4 @@ def sentimentAnalysis(question, answer):
         top_p=1,
     )
 
-    return str(int(completion['choices'][0]['message']['content']) / 100)
-
-    
+    return str(int(completion["choices"][0]["message"]["content"]) / 100)

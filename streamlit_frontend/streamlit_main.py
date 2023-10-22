@@ -1,3 +1,4 @@
+import json
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -5,6 +6,7 @@ import numpy as np
 import requests
 import dotenv
 import os
+import asyncio
 
 dotenv.load_dotenv()
 
@@ -12,27 +14,23 @@ pd.options.plotting.backend = "plotly"
 st.sidebar.write("# Manager Dashboard")
 
 
+APIKEY = os.getenv("APIKEY")
+APIURL = os.getenv("APIURL")
+AUTHKEY = os.getenv("AUTHKEY")
+
+
 def send_question(question_to_send: str):
-    # write a post request to https://loved-crawdad-privately.ngrok-free.app/setDailyQuestions
-    # with headers:
-    # headers: new Headers({
-    #     'ngrok-skip-browser-warning': '69420',
-    #     'Authorization': API_KEY,
-    # }),
-
-    APIKEY = os.getenv("APIKEY")
-
     requests.post(
-        "https://loved-crawdad-privately.ngrok-free.app/setDailyQuestions",
+        APIURL + "/setDailyQuestions",
         headers={
             "ngrok-skip-browser-warning": "69420",
-            "Authorization": APIKEY,
+            "Authorization": AUTHKEY,
         },
-        data={"question": "What is the most important thing you learned today?"},
+        data={"question": question_to_send},
     )
 
 
-def display_team(team_number: int):
+async def display_team(team_number: int):
     # print("displaying team: ", team_number)
 
     conn = st.experimental_connection("db", type="sql")
@@ -118,7 +116,7 @@ def display_team(team_number: int):
         df_scores["score"] = pd.cut(
             df_scores["score"],
             bins=[0, 0.5, 0.75, 1],
-            labels=["red", "yellow", "green"],
+            labels=["yellow", "red", "green"],
         )
 
         # color_mapper = {"red": "#ff0000", "yellow": "#fdf200", "green": "#00ff00"}
@@ -142,12 +140,22 @@ def display_team(team_number: int):
         #     st.write(df_dates)
 
         # create text form for question generation
+
         st.write("# Question Generation")
-        question_output_1 = "What is the most important thing you learned today?"
-        question_output_2 = "How did you feel about your work today?"
-        question_output_3 = " How did you feel about your team today?"
         if st.button("Generate Questions"):
             with st.form("Question Generator"):
+                questionsURL = APIURL + "/getQuestions"
+                questions = requests.get(
+                    questionsURL,
+                    headers={
+                        "ngrok-skip-browser-warning": "69420",
+                        "Authorization": AUTHKEY,
+                    },
+                )
+                questions = json.loads(questions.text)
+                question_output_1 = questions[0]
+                question_output_2 = questions[1]
+                question_output_3 = questions[2]
                 st.write("## Questions")
                 st.write("### Question 1")
                 st.write(question_output_1)
@@ -190,6 +198,6 @@ selected_team = st.sidebar.selectbox(
 )
 
 if selected_team == "Team One":
-    display_team(0)
+    asyncio.run(display_team(0))
 else:
-    display_team(1)
+    asyncio.run(display_team(1))
