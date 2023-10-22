@@ -1,13 +1,12 @@
 import API_KEY from "./APIKEY";
 
-let url="https://loved-crawdad-privately.ngrok-free.app/postDailyAnswer"
+let url="https://highly-boss-dodo.ngrok-free.app/postResponse/1"
 
 function postAnswer(id : string, question : string, answer : string) {
 
     console.log("hello")
 
     const formData = new FormData()
-    formData.append("id", id)
     formData.append("question", question)
     formData.append("answer", answer)
 

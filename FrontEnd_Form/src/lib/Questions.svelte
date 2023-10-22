@@ -5,7 +5,7 @@
     import API_KEY from "./APIKEY";
     import { questions } from "./store";
 
-    let url="https://loved-crawdad-privately.ngrok-free.app/getDailyQuestions"
+    let url="https://highly-boss-dodo.ngrok-free.app/getDailyQuestions"
 
     onMount(async () => {
         fetch(url, {
