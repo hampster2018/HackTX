@@ -108,20 +108,22 @@ def display_team(team_number: int):
         # st.write(df_dates)
 
         # use two columns to display the charts
-        col1, col2 = st.columns(2)
+        # col1, col2 = st.columns(2)
 
-        with col1:
-            st.write("## User Scores")
-            st.write(df)
-            st.write("## User Scores Over Time")
-            st.write(df_dates)
+        # with col1:
+        #     st.write("## User Scores")
+        #     st.write(df)
+        #     st.write("## User Scores Over Time")
+        #     st.write(df_dates)
 
-        with col2:
-            st.write("## User Scores Over Time")
-            pd.options.plotting.backend = "plotly"
-            st.plotly_chart(multiple_line_fig)
-            st.plotly_chart(fig_users)
-            st.plotly_chart(fig)
+        # with col2:
+        pd.options.plotting.backend = "plotly"
+        st.write("## User Scores Per Day")
+        st.plotly_chart(multiple_line_fig)
+        st.write("## User Cumulative Scores This Week")
+        st.plotly_chart(fig_users)
+        st.write("## Overall Average Team Health")
+        st.plotly_chart(fig)
 
 
 selected_team = st.sidebar.selectbox(

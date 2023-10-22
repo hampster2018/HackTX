@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] Fix sample data
+- [x] Fix sample data
 
 - [ ] Add question generation box/submit button
 
