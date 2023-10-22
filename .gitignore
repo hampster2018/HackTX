@@ -1,3 +1,4 @@
 FrontEnd_Form/package-lock.json
 streamlit_frontend/.env
 FrontEnd_Form/src/lib/APIKEY.js
+streamlit_frontend/backend_database.db
