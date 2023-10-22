@@ -1,47 +1,44 @@
 <script lang="ts">
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import DailySurvey from "./lib/DailySurvey.svelte";
+  import Survey from "./lib/Survey.svelte";
+  import Questions from "./lib/Questions.svelte";
+
+  let user = "John";
+  let ciq = "Initial question";
+  let ans_temp = "ans_temp";
+  let foreman = "Mike";
+  let quick = 1;
+  let short = 0;
+  let slide = 0;
+  let dailyFlag = 1;
+  let weeklyFlag = 1;
+
+  let animate = false;
+
 </script>
 
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-  <h2> Hello My friend </h2>
-  <div class="card">
-    <Counter />
-  </div>
+<!-- <svelte:head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+</svelte:head> -->
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
+<main class="master-container">
+    <svelte:component this={dailyFlag ? DailySurvey : null}/>
+    <svelte:component this={weeklyFlag ? Survey  : null}/>
 
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+    <Questions/>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+  .master-container{
+        /* border-style: solid; */
+        animation: fadeInAnimation ease 3s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    } @keyframes fadeInAnimation { 
+        0% { 
+            opacity: 0; 
+        } 100% { 
+            opacity: 1; 
+        } 
   }
 </style>
