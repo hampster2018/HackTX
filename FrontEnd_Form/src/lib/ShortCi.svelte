@@ -2,21 +2,24 @@
     import { onMount } from 'svelte'
     import App from '../App.svelte'
     import { fade } from 'svelte/transition'
+    import { questions, answers } from './store';
+
+    console.log($answers)
 
     // let contractor = "John"
-    let q_txt = "How has your day been?"
-    let ans1 = "Good"
-    let ans2 = "Okay"
-    let ans3 = "Bad"
 </script>
 
 <main class="ci-quick">
 
     <div class="ci-container">
-        <p>{q_txt}</p>
+        <p>{$questions[0]}</p>
     </div>
     <div class="ci-ans-container">
-        <textarea class="ans-input" placeholder="Aim to write at least two sentences."/>
+        <textarea 
+            class="ans-input" 
+            placeholder="Aim to write at least two sentences." 
+            bind:value={$answers}
+        />
     </div>
 </main>
 
@@ -34,8 +37,8 @@
         width: 100%;
         min-height: 100px;
         color: black;
-        min-width: 280px;
-        max-width: 290px;
+        min-width: 300px;
+        max-width: 350px;
         min-height: 50px;
     }
 

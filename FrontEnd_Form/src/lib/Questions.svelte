@@ -3,10 +3,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import API_KEY from "./APIKEY";
-    console.log("API_KEY: " + API_KEY);
+    import { questions } from "./store";
 
     let url="https://loved-crawdad-privately.ngrok-free.app/getDailyQuestions"
-    let questions : string[] = [];
 
     onMount(async () => {
         fetch(url, {
@@ -18,8 +17,12 @@
             })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        questions = data
+        if (data.length == 0) {
+          questions.set(["How are you feeling today?"]);
+        }
+        else {
+            questions.set(data);
+        }
     })
       .catch((err) => console.log("Error:" + err));
         console.log(questions)

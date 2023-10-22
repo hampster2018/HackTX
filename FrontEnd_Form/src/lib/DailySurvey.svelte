@@ -1,16 +1,15 @@
 <script lang="ts">
     import AdditionalComments from './AdditionalComments.svelte';
-import QuickCi from './QuickCi.svelte'
+    import QuickCi from './QuickCi.svelte'
     import ShortCi from './ShortCi.svelte'
     import SlideCi from './SlideCi.svelte'
     import { fade } from 'svelte/transition'
+    import postAnswer from './PostData'
+    import { id, questions, answers } from './store'
   
     let user = "John";
-    let ciq = "Initial question";
-    let ans_temp = "ans_temp";
-    let foreman = "Mike";
-    let quick = 1;
-    let short = 0;
+    let quick = 0;
+    let short = 1;
     let slide = 0;
   
     let animate = false
@@ -37,19 +36,23 @@ import QuickCi from './QuickCi.svelte'
     <AdditionalComments/>
 
     <div class="ci-submit-container">
-        <input class="submit" type="submit" value="Submit">
+        <input class="submit" type="submit" value="Submit" on:click={(e) => postAnswer($id, $questions[0], $answers)}>
     </div>
-  
     
   </main>
   
   <style>
+    .ci-submit-container {
+        background-color: green;
+        padding-bottom: 20px;
+    }
+
     .add-container{
       /* border: solid 1px; */
     }
 
     .submit {
-        margin-top: 15%;
+        margin-top: 0%;
         width: 100%;
         background-color: #846954;
         border: none;
@@ -62,7 +65,7 @@ import QuickCi from './QuickCi.svelte'
     }
   
     .wel-msg-txt1{
-      font-weight: 800;
+      font-weight: 700;
       font-size: 150%;
       line-height: normal;
       margin-bottom: 2%;
