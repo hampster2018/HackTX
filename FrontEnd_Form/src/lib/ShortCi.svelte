@@ -34,6 +34,9 @@
         width: 100%;
         min-height: 100px;
         color: black;
+        min-width: 280px;
+        max-width: 290px;
+        min-height: 50px;
     }
 
     .ci-ans-container{

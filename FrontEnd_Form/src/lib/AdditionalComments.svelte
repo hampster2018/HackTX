@@ -18,5 +18,8 @@
         color: black;
         width: 95%;
         border-radius: 5px;
+        min-width: 299px;
+        max-width: 300px;
+        min-height: 50px;
     }
 </style>

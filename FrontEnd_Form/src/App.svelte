@@ -1,6 +1,7 @@
 <script lang="ts">
   import DailySurvey from "./lib/DailySurvey.svelte";
   import Survey from "./lib/Survey.svelte";
+  import Questions from "./lib/Questions.svelte";
 
   let user = "John";
   let ciq = "Initial question";
@@ -12,7 +13,7 @@
   let dailyFlag = 1;
   let weeklyFlag = 1;
 
-  let animate = false
+  let animate = false;
 
 </script>
 
@@ -23,6 +24,8 @@
 <main class="master-container">
     <svelte:component this={dailyFlag ? DailySurvey : null}/>
     <svelte:component this={weeklyFlag ? Survey  : null}/>
+
+    <Questions/>
 </main>
 
 <style>
