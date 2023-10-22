@@ -143,12 +143,6 @@ def getQuestions():
     return response
 
 
-##@app.route("/sendSMS", methods=["GET"])
-##def sendSMS():
-##    send_SMS()
-##    return "200"
-
-
 def sentimentAnalysis(question, answer):
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
