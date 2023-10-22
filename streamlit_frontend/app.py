@@ -27,6 +27,17 @@ openai.api_key = os.getenv("OPENAIAPIKEY")
 openai.organization = os.getenv("OPENAIORGANIZATION")
 
 loaded_model = pickle.load(open(app.config["MODELPATH"], 'rb'))
+authkey = os.getenv("AUTHKEY")
+authRejectMessage = os.getenv("AUTHREJECTMESSAGE")
+
+@app.before_request
+def checkAPI():
+    
+    header = request.headers.get("Authorization")
+
+    if header != authkey:
+        return authRejectMessage, 401
+
 
 def get_db():
     db = getattr(g, "_database", None)
@@ -103,10 +114,10 @@ def serve_model():
 def getQuestions():
     return generateUniqueQuestions()
 
-@app.route("/sendSMS")
-def sendSMS():
-    send_SMS()
-    return "200"
+##@app.route("/sendSMS", methods=["GET"])
+##def sendSMS():
+##    send_SMS()
+##    return "200"
 
 def sentimentAnalysis(question, answer):
 
