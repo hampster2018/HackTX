@@ -36,7 +36,7 @@ def checkAPI():
     header = request.headers.get("Authorization")
 
     if header != authkey:
-        return authRejectMessage, 401
+        return authRejectMessage
 
 
 def get_db():
@@ -77,15 +77,25 @@ def setDailyQuestions():
     dte = date.today()
 
     dte = pd.to_datetime(dte.strftime("%Y-%m-%d"))
-    print(dte.dayofweek)
                          
     if dte.dayofweek == 5:
-        dailyQuestions = generateQuestions(form['question'][1:-2], True)
+        dailyQuestions = generateQuestions(form['question'], True)
 
     else:
-        dailyQuestions = generateQuestions(form['question'][1:-2], False)
+        dailyQuestions = generateQuestions(form['question'], False)
 
-    print(dailyQuestions)
+    send_SMS()
+
+    return "200"
+
+@app.route("/postDailyAnswer", methods=["POST"])
+def postDailyAnswer():
+    form = request.form
+    question = form["question"]
+    answer = form["answer"]
+    id = form["id"]
+
+    print(question, answer, id)
 
     return "200"
 
@@ -114,10 +124,10 @@ def serve_model():
 def getQuestions():
     return generateUniqueQuestions()
 
-##@app.route("/sendSMS", methods=["GET"])
-##def sendSMS():
-##    send_SMS()
-##    return "200"
+@app.route("/sendSMS", methods=["GET"])
+def sendSMS():
+    send_SMS()
+    return "200"
 
 def sentimentAnalysis(question, answer):
 

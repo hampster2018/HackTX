@@ -14,7 +14,7 @@ def send_SMS():
 
     message = client.messages \
                     .create( 
-                        body= "Yo what is good",
+                        body= "Hello this is a reminder to complete your daily wellness check! Please visit https://loved-crawdad-privately.ngrok-free.app/?id=1 to complete your check.",
                         from_=fromNumber,
                         to=toNumber,
                     )
