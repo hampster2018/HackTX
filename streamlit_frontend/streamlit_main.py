@@ -2,12 +2,38 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+import requests
+import dotenv
+import os
 
+dotenv.load_dotenv()
+
+pd.options.plotting.backend = "plotly"
 st.sidebar.write("# Manager Dashboard")
 
 
+def send_question(question_to_send: str):
+    # write a post request to https://loved-crawdad-privately.ngrok-free.app/setDailyQuestions
+    # with headers:
+    # headers: new Headers({
+    #     'ngrok-skip-browser-warning': '69420',
+    #     'Authorization': API_KEY,
+    # }),
+
+    APIKEY = os.getenv("APIKEY")
+
+    requests.post(
+        "https://loved-crawdad-privately.ngrok-free.app/setDailyQuestions",
+        headers={
+            "ngrok-skip-browser-warning": "69420",
+            "Authorization": APIKEY,
+        },
+        data={"question": "What is the most important thing you learned today?"},
+    )
+
+
 def display_team(team_number: int):
-    print("displaying team: ", team_number)
+    # print("displaying team: ", team_number)
 
     conn = st.experimental_connection("db", type="sql")
 
@@ -103,7 +129,6 @@ def display_team(team_number: int):
         )
         # fig.update_traces(marker=dict(colors=["red", "yellow", "green"]))
 
-        st.write(f"# Team {team_number + 1}")
         # st.write(df)
         # st.write(df_dates)
 
@@ -116,8 +141,41 @@ def display_team(team_number: int):
         #     st.write("## User Scores Over Time")
         #     st.write(df_dates)
 
-        # with col2:
-        pd.options.plotting.backend = "plotly"
+        # create text form for question generation
+        st.write("# Question Generation")
+        question_output_1 = "What is the most important thing you learned today?"
+        question_output_2 = "How did you feel about your work today?"
+        question_output_3 = " How did you feel about your team today?"
+        if st.button("Generate Questions"):
+            with st.form("Question Generator"):
+                st.write("## Questions")
+                st.write("### Question 1")
+                st.write(question_output_1)
+                st.write("### Question 2")
+                st.write(question_output_2)
+                st.write("### Question 3")
+                st.write(question_output_3)
+                st.write("### Custom Question")
+                custom_question = st.text_input(
+                    "Enter a custom question here: ", "How is your family?"
+                )
+
+                selected_text = st.selectbox(
+                    "Select the question you want to send!",
+                    [
+                        question_output_1,
+                        question_output_2,
+                        question_output_3,
+                        custom_question,
+                    ],
+                )
+
+                st.form_submit_button(
+                    "Submit", on_click=send_question, args=(selected_text,)
+                )
+
+        #     st.write("## User Scores Over Time")
+        st.write(f"# Team {team_number + 1}")
         st.write("## User Scores Per Day")
         st.plotly_chart(multiple_line_fig)
         st.write("## User Cumulative Scores This Week")
