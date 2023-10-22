@@ -36,7 +36,8 @@ def checkAPI():
     header = request.headers.get("Authorization")
 
     if header != authkey:
-        return authRejectMessage
+        print("authorization failed")
+        return authRejectMessage, 200
 
 
 def get_db():
@@ -90,18 +91,6 @@ def setDailyQuestions():
     return "200"
 
 
-@app.route("/postDailyAnswer", methods=["POST"])
-def postDailyAnswer():
-    form = request.form
-    question = form["question"]
-    answer = form["answer"]
-    id = form["id"]
-
-    print(question, answer, id)
-
-    return "200"
-
-
 @app.route("/getDailyQuestions")
 def getDailyQuestions():
     global dailyQuestions
@@ -114,9 +103,20 @@ def postResponse(id):
     question = form["question"]
     answer = form["answer"]
     score = sentimentAnalysis(question, answer)
+    print(score)
     db = get_db()
     cur = db.cursor()
-    cur.execute("INSERT INTO form_responses VALUES (?, ?)", (id, score))
+    cur.execute(
+        "UPDATE form_responses SET score = ? WHERE user_id = ? AND sending_time = ?",
+        (score, id, "2023-10-22"),
+    )
+    db.commit()
+
+    # query the record we just added and print it
+    cur.execute("SELECT * FROM form_responses WHERE user_id = ?", (id,))
+    output = cur.fetchall()
+    print(output)
+
     return score
 
 
