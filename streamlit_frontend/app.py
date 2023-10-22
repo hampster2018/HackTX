@@ -13,6 +13,7 @@ from send_sms import send_SMS
 from datetime import date
 import pandas as pd
 import json
+from twilio.rest import Client
 
 app = Flask(__name__)
 CORS(app)
@@ -26,9 +27,17 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAIAPIKEY")
 openai.organization = os.getenv("OPENAIORGANIZATION")
 
+
+account_sid = os.getenv("TWILIOAPI")
+auth_token = os.getenv("TWILIOAUTH")
+fromNumber = os.getenv("TWILIONUMBER")
+toNumber = os.getenv("TWILIOCLIENTNUMBER")
+
 loaded_model = pickle.load(open(app.config["MODELPATH"], "rb"))
 authkey = os.getenv("AUTHKEY")
 authRejectMessage = os.getenv("AUTHREJECTMESSAGE")
+
+client = Client(account_sid, auth_token)
 
 
 @app.before_request
@@ -73,6 +82,7 @@ def hello_world():
 @app.route("/setDailyQuestions", methods=["POST"])
 def setDailyQuestions():
     global dailyQuestions
+    global client
 
     form = request.form
 
@@ -86,7 +96,9 @@ def setDailyQuestions():
     else:
         dailyQuestions = generateQuestions(form["question"], False)
 
-    send_SMS()
+    send_SMS(client)
+
+    print("sent SMS!")
 
     return "200"
 
