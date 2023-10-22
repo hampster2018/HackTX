@@ -7,6 +7,12 @@ import openai
 from dotenv import load_dotenv
 import os
 from config import prompts
+from generateUniqueQuestions import generateUniqueQuestions
+from generateQuestions import generateQuestions
+from send_sms import send_SMS
+from datetime import date
+import pandas as pd
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -14,10 +20,11 @@ CORS(app)
 app.config["DATABASE"] = "./backend_database.db"
 app.config["MODELPATH"] = "../model_code/finalized_model.sav"
 
+dailyQuestions = []
+
 load_dotenv()
 openai.api_key = os.getenv("OPENAIAPIKEY")
 openai.organization = os.getenv("OPENAIORGANIZATION")
-print(openai.Model.list())
 
 loaded_model = pickle.load(open(app.config["MODELPATH"], 'rb'))
 
@@ -50,6 +57,32 @@ def hello_world():
     get_db()
     return "Hello, World!"
 
+@app.route("/setDailyQuestions", methods=["POST"])
+def setDailyQuestions():
+    global dailyQuestions
+
+    form = request.form
+    
+    dte = date.today()
+
+    dte = pd.to_datetime(dte.strftime("%Y-%m-%d"))
+    print(dte.dayofweek)
+                         
+    if dte.dayofweek == 5:
+        dailyQuestions = generateQuestions(form['question'][1:-2], True)
+
+    else:
+        dailyQuestions = generateQuestions(form['question'][1:-2], False)
+
+    print(dailyQuestions)
+
+    return "200"
+
+@app.route("/getDailyQuestions")
+def getDailyQuestions():
+    global dailyQuestions
+    return json.dumps(dailyQuestions)
+
 @app.route("/postResponse/<id>", methods=["POST"])
 def postResponse(id):
     form = request.form
@@ -65,6 +98,15 @@ def serve_model():
     prediction = loaded_model.predict([data])
 
     return str(prediction[0])
+
+@app.route("/getQuestions")
+def getQuestions():
+    return generateUniqueQuestions()
+
+@app.route("/sendSMS")
+def sendSMS():
+    send_SMS()
+    return "200"
 
 def sentimentAnalysis(question, answer):
 
